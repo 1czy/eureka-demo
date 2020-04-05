@@ -1,0 +1,50 @@
+server:
+  port: 7903
+# 集群下的服务名称最好一样,否则可能会出现 unavailable-replicas 这种情况
+# 网上有些帖子测试过没有出现,但是我这个版本是有的
+# 一个集群,服务名称最好一致,避免不必要的误解
+spring:
+  application:
+    name: eureka-serve
+# eureka 主要配置属性在EurekaInstanceConfigBean和EurekaClientConfigBean中
+eureka:
+  instance:
+    # 实例名称这和下面的 preferIpAddress 配置,只能有一个,自己摸索下
+    hostname: ek3.com
+    # preferIpAddress: true   ==>  http://172.0.0.1:7902/eureka/
+    # 心跳间隔
+    lease-renewal-interval-in-seconds: 3
+    # 服务失效时间： 如果多久没有收到请求，则可以删除服务
+    lease-expiration-duration-in-seconds: 5
+  client:
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
+    eureka-service-url-poll-interval-seconds: 60
+    # 定义从注册中心获取注册服务的信息
+    registry-fetch-interval-seconds: 5
+    # 表示是否从eureka服务器获取注册信息
+    fetch-registry: false
+    # 注册自身到eureka服务器
+    register-with-eureka: true
+    serviceUrl:
+      # 设置eureka服务器所在的地址，可以同时向多个服务注册服务
+      defaultZone: http://ek2.com:7902/eureka/,http://ek1.com:7901/eureka/
+  server:
+    # 关闭自我保护模式                                                           
+    enable-self-preservation: false
+    # 设置清理间隔,单位为毫秒,默认为0
+    eviction-interval-timer-in-ms: 3000
+    # 设置如果Eureka Server启动时无法从临近Eureka Server节点获取注册信息，它多久不对外提供注册服务
+    wait-time-in-ms-when-sync-empty: 6000000
+    # 集群之间相互更新节点信息的时间频率
+    peer-eureka-nodes-update-interval-ms: 60000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # *代表所有节点都加载
+        include: "*"
+  endpoint:
+    shutdown:
+      # 开启远程关闭功能
+      enabled: true
