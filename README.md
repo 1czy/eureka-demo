@@ -75,7 +75,7 @@
 
 // spring boot 和 spring cloud 是有版本对应关系的,可以去官网看看,别搞错了
 
-![springcloudversion](./springcloudversion.jpg)
+![springcloudversion](./images/springcloudversion.jpg)
 
 // 再介绍下 spring cloud 官网的版本
 
